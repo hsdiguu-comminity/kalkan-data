@@ -23,6 +23,20 @@ tests/                    pytest
 
 > Dashboard'da 5'ten az ihbar içeren gruplar gösterilmez. Ham veriye yalnızca yetkili kişiler erişir.
 
+## Kurulum
+
+Python 3.12+ gerekir.
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate                     # macOS/Linux: source .venv/bin/activate
+pip install -r requirements-dev.txt          # Veri servisi + test araçları
+pip install -r requirements-analysis.txt     # pandas, Prophet, Jupyter vb. (gerektiğinde)
+uvicorn app.main:app --reload --port 8003 --app-dir service
+pytest
+ruff check . && ruff format .
+```
+
 ## Çalışma kuralları
 
 - `main` korumalıdır; her değişiklik ayrı bir branch ve pull request ile gelir, en az 1 onay gerekir.
