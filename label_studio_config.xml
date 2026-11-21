@@ -1,0 +1,24 @@
+<View>
+  <Header value="SMS Metni:"/>
+  <Text name="sms_text" value="$text"/>
+
+  <Header value="Sınıflandırma:"/>
+  <Choices name="sinif" toName="sms_text" choice="single" required="true">
+    <Choice value="Güvenli"/>
+    <Choice value="Şüpheli"/>
+    <Choice value="Dolandırıcılık"/>
+  </Choices>
+
+  <Header value="Kategori:"/>
+  <Choices name="kategori" toName="sms_text" choice="single">
+    <Choice value="Kargo"/>
+    <Choice value="Banka"/>
+    <Choice value="HGS"/>
+    <Choice value="e-Devlet"/>
+    <Choice value="Ödül / Çekiliş"/>
+    <Choice value="Diğer"/>
+  </Choices>
+
+  <Header value="Not (İsteğe Bağlı):"/>
+  <TextArea name="not" toName="sms_text" placeholder="Varsa açıklama ekleyin..."/>
+</View>
