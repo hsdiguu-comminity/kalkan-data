@@ -26,9 +26,9 @@ Her kayıt için doldurulacak alanlar:
 | --- | --- | --- |
 | `sinif` | `guvenli`, `supheli`, `dolandiricilik` | Evet |
 | `kategori` | `kimlik_avi`, `sahte_odeme`, `hesap_ele_gecirme`, `kimlik_bilgisi`, `sahte_alisveris`, `odul_kampanya`, `diger` | Yalnızca `dolandiricilik` ise. Diğer sınıflarda boş bırakılır. |
-| `ikincil_kategori` | `kategori` ile aynı değerler | Hayır. En fazla 1 tane. |
+| `ikincil_kategori` | `kategori` ile aynı değerler | Hayır. En fazla 1 tane. Yalnızca `kategori` doluysa verilir ve `kategori`'den farklı olmalıdır. |
 | `gozden_gecir` | `true` / `false` | Evet (varsayılan `false`) |
-| `not` | Tek cümle serbest metin | Hayır. Kişisel veri yazılmaz. |
+| `not` | Tek cümle serbest metin | Hayır. `kategori = diger` ise zorunlu. Kişisel veri yazılmaz. |
 
 ### 3.1 İngilizce karşılıklar
 
@@ -58,10 +58,9 @@ Kılavuzda okunabilirlik için Türkçe adlar kullanılır. Veri setinde ve kodd
 
 ### 4.1 Güvenli
 
-İçerikte **güçlü veya orta düzey hiçbir risk işareti yoktur** (bkz. 5). Kullanıcıdan şifre, kod, kart bilgisi veya para istemez; kullanıcıyı korkutmaz veya acele ettirmez.
+İçerikte **güçlü veya orta düzey hiçbir risk işareti yoktur** (bkz. 5). Kullanıcıdan şifre, kod veya kart bilgisi istemez; resmi olmayan bir kanala para gönderilmesini istemez; kullanıcıyı korkutmaz veya baskı altında bırakmaz. Resmi alan adlı bir fatura/ödeme hatırlatması, tehdit içermedikçe güvenlidir.
 
-- Gönderenin doğrulanamaması, tek başına içeriği şüpheli yapmaz.
-- Yazım hatası, link bulunması veya bilinmeyen gönderici (zayıf işaretler) tek başına içeriği şüpheli yapmaz.
+- Yazım hatası, link bulunması veya bilinmeyen/doğrulanamayan gönderici (zayıf işaretler) tek başına içeriği şüpheli yapmaz.
 - Reklam ve kampanya mesajları, risk işareti taşımadıkça güvenlidir.
 
 ### 4.2 Şüpheli
@@ -88,6 +87,8 @@ Kılavuzda okunabilirlik için Türkçe adlar kullanılır. Veri setinde ve kodd
 | G6 | Mesajla/link ile **kimlik bilgisi** isteniyor (TC kimlik no, doğum tarihi, adres, anne kızlık soyadı vb.). |
 | G7 | Tanıdık biri gibi davranılıp klasik bir kalıpla acil para veya kod isteniyor (örn. "numaram değişti, acil para lazım", "yanlışlıkla sana kod gitti, iletir misin"). |
 
+**G2 notu:** "İşlem/ödeme/bilgi girişi isteniyor" ifadesi, "güncelleyin", "doğrulayın", "giriş yapın", "ödeyin" gibi açık bir istek anlamına gelir. Yalnızca bilgi vermek için konmuş bir link ("takip için", "detaylar için") işlem isteği sayılmaz. Link resmi değilse bu durumda O2'ye bak.
+
 ### 5.2 Orta işaretler (güçlü işaret yoksa ve en az biri varsa: `supheli`)
 
 | Kod | İşaret |
@@ -96,7 +97,7 @@ Kılavuzda okunabilirlik için Türkçe adlar kullanılır. Veri setinde ve kodd
 | O2 | Doğrulanamayan veya kısaltılmış link (bit.ly vb.), ya da alan adının resmi olup olmadığı belirlenemiyor. |
 | O3 | Beklenmedik ödül, iade veya borç iddiası var, ancak kullanıcıdan eylem istenmiyor. |
 | O4 | Doğrulanamayan bir geri arama kanalına yönlendirme (bilinmeyen telefon, WhatsApp hattı vb.). |
-| O5 | Para veya kod isteği var, ancak G4/G7 kalıbı tamamlanmıyor (baskı + IBAN/link, numara değişikliği gibi unsurlar yok). Örn. kısa bir "acil 2.000 TL atabilir misin?" mesajı. |
+| O5 | Para isteği var, ancak G4/G7 kalıbı tamamlanmıyor (baskı, tehdit, acelecilik, IBAN/link, numara değişikliği gibi unsurlar yok). Örn. kısa bir "2.000 TL atabilir misin?" mesajı. Doğrulama kodu isteği O5 değildir, her zaman G1'dir. |
 
 ### 5.3 Zayıf işaretler (tek başına etiketi değiştirmez)
 
@@ -139,12 +140,15 @@ Emin değilsen alan adını kurumun kendi sitesinden (tarayıcıya elle yazarak)
 - Resmi olup olmadığı belirsiz veya kısaltılmış → `supheli`
 - Bilinen resmi alan adı → `guvenli`
 
+Bu bölüm yalnızca tek başına URL için geçerli özel bir kuraldır. Metin olmadığı için G2'deki "istek" koşulu aranmaz.
+
 ## 7. Kategori seçimi (özet)
 
 Yalnızca `dolandiricilik` etiketli içeriklere verilir. Kategoriyi **mesajın kullandığı bahane (hikâye)** belirler. Ayrıntı ve karar tablosu: [categories.md](categories.md).
 
 - Birden fazla kategori uyuyorsa asıl bahaneye göre `kategori`, ikinci en uygun olanı `ikincil_kategori` olarak seç.
 - Hiçbiri uymuyorsa `diger` seç ve `not` alanına tek cümleyle yaz.
+- Dosya/uygulama kurdurma (G5) için ayrı bir kategori yoktur: bahane başka bir kategoriye uymuyorsa `diger` seç ve `not` alanına yaz.
 
 ## 8. Sınır durumları (özet kurallar)
 
@@ -157,7 +161,7 @@ Ayrıntılı örnekler [examples.md](examples.md) dosyasındadır.
 - Bilinmeyen göndericiden gelen, risk işareti taşımayan mesaj → `guvenli`.
 - Çok hatalı yazılmış ama risk işareti olmayan mesaj → `guvenli`.
 - "Çekilişi kazandınız" der ama eylem istemez → `supheli` (O3). Eylem isterse → `dolandiricilik` (G3).
-- Kart/hesap hareketi iddiası + bilinmeyen telefona yönlendirme → `supheli` (O1 + O4).
+- Kart/hesap hareketi iddiası + bilinmeyen telefona yönlendirme → `supheli` (O4). Mesaj ayrıca "olağan dışı işlem" gibi belirsiz bir uyarı içeriyorsa O1 de eklenir. Tutar/yer/kart sonu içeren rutin harcama bildirimi tek başına O1 sayılmaz.
 - Tanıdık numaradan "acil para" mesajı: klasik dolandırıcılık kalıbı varsa (numara değişikliği, gizlilik isteği, hemen IBAN) → `dolandiricilik`; yalnızca kısa bir para isteği varsa → `supheli`.
 
 ## 9. Emin olamadığında
@@ -189,7 +193,7 @@ Maskelenmeyenler (model için gerekli): **alan adı**, **tutar**, **tarih**, **k
 ## 11. Kalite kontrol ve anlaşmazlıklar
 
 - Veri setinin bir kısmı (öneri: yaklaşık %10) iki farklı kişi tarafından bağımsız etiketlenir ve uyum ölçülür.
-- İki etiket farklıysa Veri Bilimi alan yöneticisi veya görevlendirdiği kişi karar verir. Karar, kılavuza yeni bir kural olarak işlenir.
+- İki etiket farklıysa Veri Bilimi alan yöneticisi (atanana kadar etiketleme alt ekibi sorumlusu) veya görevlendirdiği kişi karar verir. Karar, kılavuza yeni bir kural olarak işlenir.
 - `gozden_gecir = true` kayıtları düzenli aralıklarla toplanır ve kılavuz güncellemesinde kullanılır.
 - Kılavuz değişince eski etiketlerin etkilenip etkilenmediği kontrol edilir ve sürüm geçmişine yazılır.
 
